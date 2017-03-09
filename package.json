@@ -4,7 +4,13 @@
   "description": "ray tracer canvas",
   "main": "build/index.js",
   "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "preversion": "npm run release && git add -A && git commit -m 'release: release new version'",
+    "patch": "npm version patch -m 'release: v%s'",
+    "postversion": "git push github-origin master && git push github-origin v$npm_package_version",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "release": "npm run build",
     "lint": "eslint ."
   },
   "pre-commit": [
@@ -24,10 +30,30 @@
     "url": "https://github.com/jasonChen1982/rayTracer/issues"
   },
   "homepage": "https://github.com/jasonChen1982/rayTracer#readme",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
+    "eslint": "^3.17.1",
     "pre-commit": "^1.2.2",
-    "eslint": "^3.17.1"
+    "rollup": "^0.41.4",
+    "rollup-watch": "^3.2.2",
+    "validate-commit-msg": "^2.11.2"
+  },
+  "config": {
+    "validate-commit-msg": {
+      "types": [
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "perf",
+        "test",
+        "chore",
+        "release",
+        "build",
+        "revert",
+        "deps"
+      ]
+    }
   }
 }
