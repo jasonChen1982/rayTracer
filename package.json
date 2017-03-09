@@ -1,0 +1,23 @@
+{
+  "name": "raytracer",
+  "version": "1.0.0",
+  "description": "ray tracer canvas",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jasonChen1982/rayTracer.git"
+  },
+  "keywords": [
+    "ray",
+    "tracer"
+  ],
+  "author": "jasonchen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jasonChen1982/rayTracer/issues"
+  },
+  "homepage": "https://github.com/jasonChen1982/rayTracer#readme"
+}
