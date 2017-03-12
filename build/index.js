@@ -148,10 +148,6 @@ var _Math = {
 
 };
 
-/**
- * @author mrdoob / http://mrdoob.com/
- */
-
 function Color( r, g, b ) {
 
   if ( g === undefined && b === undefined ) {
@@ -789,19 +785,6 @@ var ColorKeywords = {
   'yellow': 0xFFFF00,
   'yellowgreen': 0x9ACD32
 };
-
-/**
- * @author mrdoob / http://mrdoob.com/
- * @author supereggbert / http://www.paulbrunt.co.uk/
- * @author philogb / http://blog.thejit.org/
- * @author jordi_ros / http://plattsoft.com
- * @author D1plo1d / http://github.com/D1plo1d
- * @author alteredq / http://alteredqualia.com/
- * @author mikael emtinger / http://gomo.se/
- * @author timknip / http://www.floorplanner.com/
- * @author bhouston / http://clara.io
- * @author WestLangley / http://github.com/WestLangley
- */
 
 function Matrix4() {
 
@@ -1731,13 +1714,6 @@ Matrix4.prototype = {
 
 };
 
-/**
- * @author mikael emtinger / http://gomo.se/
- * @author alteredq / http://alteredqualia.com/
- * @author WestLangley / http://github.com/WestLangley
- * @author bhouston / http://clara.io
- */
-
 function Quaternion( x, y, z, w ) {
 
   this._x = x || 0;
@@ -2316,15 +2292,6 @@ Object.assign( Quaternion, {
   }
 
 } );
-
-/**
- * @author mrdoob / http://mrdoob.com/
- * @author *kile / http://kile.stravaganza.org/
- * @author philogb / http://blog.thejit.org/
- * @author mikael emtinger / http://gomo.se/
- * @author egraether / http://egraether.com/
- * @author WestLangley / http://github.com/WestLangley
- */
 
 function Vector3( x, y, z ) {
 
@@ -3048,10 +3015,6 @@ Vector3.prototype = {
   }
 
 };
-
-/**
- * @author bhouston / http://clara.io
- */
 
 function Ray( origin, direction ) {
 
@@ -4011,22 +3974,19 @@ IntersectResult.noHit = new IntersectResult();
 function Sphere (center, radius) {
   this.center = center;
   this.radius = radius;
+  this.parent = null;
   this.init();
 }
 
 Sphere.prototype = {
-  copy: function() {
-    return new Sphere(this.center.copy(), this.radius.copy());
-  },
-
   init : function() {
     this.sqrRadius = this.radius * this.radius;
   },
 
   intersect : function(ray) {
-    var v = ray.origin.sub(this.center);
+    var v = ray.origin.clone().sub(this.center);
     var a0 = v.lengthSq() - this.sqrRadius;
-    var DdotV = ray.direction.dot(v);
+    var DdotV = ray.direction.clone().dot(v);
 
     if (DdotV <= 0) {
       var discr = DdotV * DdotV - a0;
@@ -4035,12 +3995,34 @@ Sphere.prototype = {
         result.geometry = this;
         result.distance = -DdotV - Math.sqrt(discr);
         result.position = ray.at(result.distance);
-        result.normal = result.position.sub(this.center).normalize();
+        result.normal = result.position.clone().sub(this.center).normalize();
         return result;
       }
     }
 
     return IntersectResult.noHit;
+  }
+};
+
+function Plane (normal, d) {
+  this.normal = normal;
+  this.d = d;
+  this.position = this.normal.clone().multiplyScalar(this.d);
+  this.parent = null;
+}
+
+Plane.prototype = {
+  intersect : function(ray) {
+    var a = ray.direction.clone().dot(this.normal);
+    if (a >= 0) return IntersectResult.noHit;
+
+    var b = this.normal.clone().dot(ray.origin.clone().sub(this.position));
+    var result = new IntersectResult();
+    result.geometry = this;
+    result.distance = -b / a;
+    result.position = ray.at(result.distance);
+    result.normal = this.normal;
+    return result;
   }
 };
 
@@ -4053,17 +4035,28 @@ function PhongMaterial(diffuse, specular, shininess, reflectiveness) {
 
 // global temp
 var lightDir = new Vector3(1, 1, 1).normalize();
-var lightColor = new Color(1);
-lightColor.set(0xbbbbbb);
+var lightColor = new Color(0xffffff);
+// lightColor.set(0xffffff);
 
 PhongMaterial.prototype = {
   sample: function(ray, position, normal) {
-    var NdotL = normal.dot(lightDir);
-    var H = (lightDir.sub(ray.direction)).normalize();
-    var NdotH = normal.dot(H);
-    var diffuseTerm = this.diffuse.multiply(Math.max(NdotL, 0));
-    var specularTerm = this.specular.multiply(Math.pow(Math.max(NdotH, 0), this.shininess));
-    return lightColor.modulate(diffuseTerm.add(specularTerm));
+    var NdotL = normal.clone().dot(lightDir);
+    var H = (lightDir.clone().sub(ray.direction)).normalize();
+    var NdotH = normal.clone().dot(H);
+    var diffuseTerm = this.diffuse.clone().multiplyScalar(Math.max(NdotL, 0));
+    var specularTerm = this.specular.clone().multiplyScalar(Math.pow(Math.max(NdotH, 0), this.shininess));
+    return lightColor.clone().multiply(diffuseTerm.add(specularTerm));
+  }
+};
+
+function CheckerMaterial(scale, reflectiveness) {
+  this.scale = scale;
+  this.reflectiveness = reflectiveness;
+}
+
+CheckerMaterial.prototype = {
+  sample : function(ray, position) {
+    return Math.abs((Math.floor(position.x * 0.1) + Math.floor(position.z * this.scale)) % 2) < 1 ? new Color(0,0,0) : new Color(1,1,1);
   }
 };
 
@@ -4071,7 +4064,7 @@ PhongMaterial.prototype = {
 function Camera(eye, fov, front, up) {
   this.eye = eye;
   this.front = front;
-  this.up = up;
+  this.uper = up;
   this.fov = fov;
   this.init();
 }
@@ -4079,14 +4072,17 @@ Camera.prototype = {
   constructor: Camera,
   init: function () {
     this.right = new Vector3();
-    this.right.crossVectors(this.front, this.up);
+    this.right.crossVectors(this.front, this.uper);
+    this.up = new Vector3();
+    this.up.crossVectors(this.right, this.front);
     this.fovScale = Math.tan(this.fov * 0.5 * _Math.DTR) * 2;
   },
   getRay : function(x, y) {
-    var r = this.right.multiplyScalar((x - 0.5) * this.fovScale);
-    var u = this.up.multiplyScalar((y - 0.5) * this.fovScale);
+    var r = this.right.clone().multiplyScalar((x - 0.5) * this.fovScale);
+    var u = this.up.clone().multiplyScalar((y - 0.5) * this.fovScale);
     var d = this.front.clone().add(r).add(u).normalize();
-    return new Ray(this.eye, d);
+    // console.log(d);
+    return new Ray(this.eye.clone(), d);
   }
 };
 
@@ -4130,18 +4126,6 @@ Scene.prototype = {
       object.parent = null;
       this.childs.splice(index, 1);
     }
-  },
-  intersect: function(ray) {
-    var minDistance = Infinity;
-    var minResult = IntersectResult.noHit;
-    for (var i in this.geometries) {
-      var result = this.geometries[i].intersect(ray);
-      if (result.geometry && result.distance < minDistance) {
-        minDistance = result.distance;
-        minResult = result;
-      }
-    }
-    return minResult;
   }
 };
 
@@ -4160,10 +4144,11 @@ Renderer.prototype = {
     this.ctx.fillRect(0, 0, this.width, this.height);
   },
   render: function (scene, camera) {
+    this.clear();
     var pixels = this.frameBuffer.data;
     var i = 0;
     for (var y = 0; y < this.height; y++) {
-      var sy = x / this.height;
+      var sy = 1 - y / this.height;
       for (var x = 0; x < this.width; x++) {
         var sx = x / this.width;
         var ray = camera.getRay(sx, sy);
@@ -4176,23 +4161,37 @@ Renderer.prototype = {
     }
     this.ctx.putImageData(this.frameBuffer, 0, 0);
   },
+  intersect: function(scene, ray) {
+    var minDistance = Infinity;
+    var minResult = IntersectResult.noHit;
+    for (var i in scene.childs) {
+      var result = scene.childs[i].intersect(ray);
+
+      if (result.geometry && result.distance < minDistance) {
+        minDistance = result.distance;
+        minResult = result;
+      }
+    }
+    return minResult;
+  },
   rayTrace: function (scene, ray, maxReflect) {
-    var result = scene.intersect(ray);
+
+    var result = this.intersect(scene, ray);
 
     if (result.geometry) {
       var reflectiveness = result.geometry.material.reflectiveness;
       var color = result.geometry.material.sample(ray, result.position, result.normal);
-      color = color.multiply(1 - reflectiveness);
+      color = color.clone().multiplyScalar(1 - reflectiveness);
 
       if (reflectiveness > 0 && maxReflect > 0) {
-        var r = result.normal.multiply(-2 * result.normal.dot(ray.direction)).add(ray.direction);
+        var r = result.normal.clone().multiplyScalar(-2 * result.normal.clone().dot(ray.direction)).add(ray.direction);
         ray = new Ray(result.position, r);
         var reflectedColor = this.rayTrace(scene, ray, maxReflect - 1);
-        color = color.add(reflectedColor.multiply(reflectiveness));
+        color = color.clone().add(reflectedColor.multiplyScalar(reflectiveness));
       }
       return color;
     }
-    return Color.black;
+    return new Color(0, 0, 0);
   }
 };
 
@@ -4204,7 +4203,9 @@ exports.Vector4 = Vector4;
 exports.Matrix4 = Matrix4;
 exports.Quaternion = Quaternion;
 exports.Sphere = Sphere;
+exports.Plane = Plane;
 exports.PhongMaterial = PhongMaterial;
+exports.CheckerMaterial = CheckerMaterial;
 exports.Camera = Camera;
 exports.Scene = Scene;
 exports.Renderer = Renderer;

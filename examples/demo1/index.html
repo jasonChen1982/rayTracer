@@ -15,11 +15,22 @@
 </style>
 </head>
 <body>
-<canvas id="canvas_screen" width="1024" height="1024"></canvas>
-<script type="text/javascript" src="../../build/index.js"></script>
+<canvas id="canvas_screen" width="512" height="512"></canvas>
+<script type="text/javascript" src="../../build/index.js?t=132321"></script>
 <script type="text/javascript">
-var sphere = new JC.Sphere(new JC.Vector3(), 10);
-sphere.material = new JC.PhongMaterial(new JC.Color(), new JC.Color(), 16, 0.25);
+var sphere = new JC.Sphere(new JC.Vector3(0, 10, -10), 10);
+sphere.material = new JC.PhongMaterial(new JC.Color(1, 0, 0), new JC.Color(1, 1, 1), 16, 0.25);
+
+var plane = new JC.Plane(new JC.Vector3(0, 1, 0), 0);
+plane.material = new JC.CheckerMaterial(0.1, 0.5);
+
+var scene = new JC.Scene();
+var camera = new JC.Camera(new JC.Vector3(0, 5, 15), 90, new JC.Vector3(0, 0, -1), new JC.Vector3(0, 1, 0));
+var renderer = new JC.Renderer({
+  canvas: document.querySelector('#canvas_screen'),
+});
+scene.adds(plane, sphere);
+renderer.render(scene, camera);
 </script>
 </body>
 

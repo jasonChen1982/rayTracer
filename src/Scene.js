@@ -1,5 +1,3 @@
-import { IntersectResult } from './IntersectResult';
-
 function Scene() {
   this.childs = [];
   this.lights = null;
@@ -40,18 +38,6 @@ Scene.prototype = {
       object.parent = null;
       this.childs.splice(index, 1);
     }
-  },
-  intersect: function(ray) {
-    var minDistance = Infinity;
-    var minResult = IntersectResult.noHit;
-    for (var i in this.geometries) {
-      var result = this.geometries[i].intersect(ray);
-      if (result.geometry && result.distance < minDistance) {
-        minDistance = result.distance;
-        minResult = result;
-      }
-    }
-    return minResult;
   }
 };
 
