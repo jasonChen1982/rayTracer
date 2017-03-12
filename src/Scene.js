@@ -1,3 +1,5 @@
+import IntersectResult from './IntersectResult';
+
 function Scene() {
   this.childs = [];
   this.lights = null;
