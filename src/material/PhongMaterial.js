@@ -24,3 +24,5 @@ PhongMaterial.prototype = {
     return lightColor.modulate(diffuseTerm.add(specularTerm));
   }
 };
+
+export { PhongMaterial };

@@ -8,3 +8,5 @@ function IntersectResult() {
 }
 
 IntersectResult.noHit = new IntersectResult();
+
+export {IntersectResult};

@@ -1,4 +1,4 @@
-import IntersectResult from './IntersectResult';
+import { IntersectResult } from './IntersectResult';
 
 function Scene() {
   this.childs = [];

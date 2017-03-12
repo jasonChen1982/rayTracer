@@ -3999,6 +3999,74 @@ Vector4.prototype = {
 
 };
 
+function IntersectResult() {
+  this.geometry = null;
+  this.distance = 0;
+  this.position = new Vector3();
+  this.normal = new Vector3();
+}
+
+IntersectResult.noHit = new IntersectResult();
+
+function Sphere (center, radius) {
+  this.center = center;
+  this.radius = radius;
+  this.init();
+}
+
+Sphere.prototype = {
+  copy: function() {
+    return new Sphere(this.center.copy(), this.radius.copy());
+  },
+
+  init : function() {
+    this.sqrRadius = this.radius * this.radius;
+  },
+
+  intersect : function(ray) {
+    var v = ray.origin.sub(this.center);
+    var a0 = v.lengthSq() - this.sqrRadius;
+    var DdotV = ray.direction.dot(v);
+
+    if (DdotV <= 0) {
+      var discr = DdotV * DdotV - a0;
+      if (discr >= 0) {
+        var result = new IntersectResult();
+        result.geometry = this;
+        result.distance = -DdotV - Math.sqrt(discr);
+        result.position = ray.at(result.distance);
+        result.normal = result.position.sub(this.center).normalize();
+        return result;
+      }
+    }
+
+    return IntersectResult.noHit;
+  }
+};
+
+function PhongMaterial(diffuse, specular, shininess, reflectiveness) {
+  this.diffuse = diffuse;
+  this.specular = specular;
+  this.shininess = shininess;
+  this.reflectiveness = reflectiveness;
+}
+
+// global temp
+var lightDir = new Vector3(1, 1, 1).normalize();
+var lightColor = new Color(1);
+lightColor.set(0xbbbbbb);
+
+PhongMaterial.prototype = {
+  sample: function(ray, position, normal) {
+    var NdotL = normal.dot(lightDir);
+    var H = (lightDir.sub(ray.direction)).normalize();
+    var NdotH = normal.dot(H);
+    var diffuseTerm = this.diffuse.multiply(Math.max(NdotL, 0));
+    var specularTerm = this.specular.multiply(Math.pow(Math.max(NdotH, 0), this.shininess));
+    return lightColor.modulate(diffuseTerm.add(specularTerm));
+  }
+};
+
 // import { Matrix4 } from './math/Matrix4';
 function Camera(eye, fov, front, up) {
   this.eye = eye;
@@ -4135,6 +4203,8 @@ exports.Vector3 = Vector3;
 exports.Vector4 = Vector4;
 exports.Matrix4 = Matrix4;
 exports.Quaternion = Quaternion;
+exports.Sphere = Sphere;
+exports.PhongMaterial = PhongMaterial;
 exports.Camera = Camera;
 exports.Scene = Scene;
 exports.Renderer = Renderer;

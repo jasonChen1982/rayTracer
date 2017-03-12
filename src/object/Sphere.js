@@ -36,3 +36,5 @@ Sphere.prototype = {
     return IntersectResult.noHit;
   }
 };
+
+export { Sphere };
