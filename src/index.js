@@ -1,4 +1,4 @@
-
+import './raf';
 export { _Math } from './math/Math';
 export { Color } from './math/Color';
 export { Ray } from './math/Ray';

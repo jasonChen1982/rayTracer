@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+<title>JC demo</title>
+<style>
+  * {
+    margin: 0;
+  }
+  #canvas_screen {
+    width: 100%;
+  }
+</style>
+</head>
+<body>
+<canvas id="canvas_screen" width="1024" height="1024"></canvas>
+<script type="text/javascript" src="../../build/index.js"></script>
+<script type="text/javascript">
+var sphere = new JC.Sphere(new JC.Vector3(), 10);
+sphere.material = new PhongMaterial(Color.red, Color.white, 16, 0.25);
+</script>
+</body>
+
+</html>
+
