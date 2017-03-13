@@ -10,29 +10,26 @@
 
 ## Introduction
 
-rayTracer is a lightweight canvas2d render engine and build-in an awesome animator with timeline management, support event system by default.
+rayTracer is a lightweight ray tracer render engine base on canvas 2d api.
 
 ## Feature
 
-Include `Stage` `Sprite` `Graphics` `Container` `BlurFilter` `TextFace` and so on.
+Include `light` `object3d` `camera` `scene` `renderer` `reflect` and so on.
 
-Every display instance can easy start an animation and attach a timeline, just like following:
+rayTracer`s api is very like threejs, you can ease to code your stage by following:
 
 ```javascript
-cosnt ball = new JC.Sprite({
-    texture: new JC.Texture('/path/xx.png'),
+const renderer = new JC.Renderer({
+  canvas: document.querySelector('#canvas_screen'),
 });
-ball.fromTo({
-  from: {x: 100},
-  to: {x: 200},
-  ease: 'bounceOut', // set a timingfunction
-  repeats: 10, // repeat sometimes
-  infinity: true, // want infinity loop?
-  alternate: true, // loop with alternate
-  duration: 1000, // duration
-  onUpdate: function(state,rate){}, // onUpdate callback
-  onCompelete: function(){ console.log('end'); } // onCompelete callback
-});
+const scene = new JC.Scene();
+const camera = new JC.Camera(new JC.Vector3(0, 5, 15), 90, new JC.Vector3(0, 0, -1), new JC.Vector3(0, 1, 0));
+
+const plane = new JC.Plane(new JC.Vector3(0, 1, 0), 0);
+plane.material = new JC.CheckerMaterial(0.1, 0.5);
+
+scene.adds(plane);
+renderer.render(scene, camera);
 ```
 
 ## License
