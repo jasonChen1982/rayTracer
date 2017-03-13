@@ -5,16 +5,10 @@ import { _Math } from './Math';
  */
 
 function Color( r, g, b ) {
-
   if ( g === undefined && b === undefined ) {
-
-    // r is THREE.Color, hex or string
     return this.set( r );
-
   }
-
   return this.setRGB( r, g, b );
-
 }
 
 Color.prototype = {
