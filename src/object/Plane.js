@@ -10,10 +10,10 @@ function Plane (normal, d) {
 
 Plane.prototype = {
   intersect : function(ray) {
-    var a = ray.direction.clone().dot(this.normal);
+    var a = ray.direction.dot(this.normal);
     if (a >= 0) return IntersectResult.noHit;
 
-    var b = this.normal.clone().dot(ray.origin.clone().sub(this.position));
+    var b = this.normal.dot(ray.origin.clone().sub(this.position));
     var result = new IntersectResult();
     result.geometry = this;
     result.distance = -b / a;

@@ -22,7 +22,7 @@ Camera.prototype = {
     var u = new Vector3().copy(this.up).multiplyScalar((y - 0.5) * this.fovScale);
     var d = new Vector3().copy(this.front).addVectors(r, u).normalize();
 
-    return new Ray(this.eye.clone(), d);
+    return new Ray(this.eye, d);
   }
 };
 

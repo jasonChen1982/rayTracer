@@ -1,6 +1,4 @@
 import { _Math } from './Math';
-import { Matrix4 } from './Matrix4';
-import { Quaternion } from './Quaternion';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -213,135 +211,6 @@ Vector3.prototype = {
     this.z = a.z * b.z;
 
     return this;
-
-  },
-
-  applyEuler: function () {
-
-    var quaternion;
-
-    return function applyEuler( euler ) {
-
-      if ( (euler && euler.isEuler) === false ) {
-
-        console.error( 'THREE.Vector3: .applyEuler() now expects an Euler rotation rather than a Vector3 and order.' );
-
-      }
-
-      if ( quaternion === undefined ) quaternion = new Quaternion();
-
-      return this.applyQuaternion( quaternion.setFromEuler( euler ) );
-
-    };
-
-  }(),
-
-  applyAxisAngle: function () {
-
-    var quaternion;
-
-    return function applyAxisAngle( axis, angle ) {
-
-      if ( quaternion === undefined ) quaternion = new Quaternion();
-
-      return this.applyQuaternion( quaternion.setFromAxisAngle( axis, angle ) );
-
-    };
-
-  }(),
-
-  applyMatrix3: function ( m ) {
-
-    var x = this.x, y = this.y, z = this.z;
-    var e = m.elements;
-
-    this.x = e[ 0 ] * x + e[ 3 ] * y + e[ 6 ] * z;
-    this.y = e[ 1 ] * x + e[ 4 ] * y + e[ 7 ] * z;
-    this.z = e[ 2 ] * x + e[ 5 ] * y + e[ 8 ] * z;
-
-    return this;
-
-  },
-
-  applyMatrix4: function ( m ) {
-
-    var x = this.x, y = this.y, z = this.z;
-    var e = m.elements;
-
-    this.x = e[ 0 ] * x + e[ 4 ] * y + e[ 8 ]  * z + e[ 12 ];
-    this.y = e[ 1 ] * x + e[ 5 ] * y + e[ 9 ]  * z + e[ 13 ];
-    this.z = e[ 2 ] * x + e[ 6 ] * y + e[ 10 ] * z + e[ 14 ];
-    var w =  e[ 3 ] * x + e[ 7 ] * y + e[ 11 ] * z + e[ 15 ];
-
-    return this.divideScalar( w );
-
-  },
-
-  applyQuaternion: function ( q ) {
-
-    var x = this.x, y = this.y, z = this.z;
-    var qx = q.x, qy = q.y, qz = q.z, qw = q.w;
-
-    // calculate quat * vector
-
-    var ix =  qw * x + qy * z - qz * y;
-    var iy =  qw * y + qz * x - qx * z;
-    var iz =  qw * z + qx * y - qy * x;
-    var iw = - qx * x - qy * y - qz * z;
-
-    // calculate result * inverse quat
-
-    this.x = ix * qw + iw * - qx + iy * - qz - iz * - qy;
-    this.y = iy * qw + iw * - qy + iz * - qx - ix * - qz;
-    this.z = iz * qw + iw * - qz + ix * - qy - iy * - qx;
-
-    return this;
-
-  },
-
-  project: function () {
-
-    var matrix;
-
-    return function project( camera ) {
-
-      if ( matrix === undefined ) matrix = new Matrix4();
-
-      matrix.multiplyMatrices( camera.projectionMatrix, matrix.getInverse( camera.matrixWorld ) );
-      return this.applyMatrix4( matrix );
-
-    };
-
-  }(),
-
-  unproject: function () {
-
-    var matrix;
-
-    return function unproject( camera ) {
-
-      if ( matrix === undefined ) matrix = new Matrix4();
-
-      matrix.multiplyMatrices( camera.matrixWorld, matrix.getInverse( camera.projectionMatrix ) );
-      return this.applyMatrix4( matrix );
-
-    };
-
-  }(),
-
-  transformDirection: function ( m ) {
-
-    // input: THREE.Matrix4 affine matrix
-    // vector interpreted as a direction
-
-    var x = this.x, y = this.y, z = this.z;
-    var e = m.elements;
-
-    this.x = e[ 0 ] * x + e[ 4 ] * y + e[ 8 ]  * z;
-    this.y = e[ 1 ] * x + e[ 5 ] * y + e[ 9 ]  * z;
-    this.z = e[ 2 ] * x + e[ 6 ] * y + e[ 10 ] * z;
-
-    return this.normalize();
 
   },
 
@@ -650,41 +519,6 @@ Vector3.prototype = {
 
   },
 
-  setFromMatrixPosition: function ( m ) {
-
-    return this.setFromMatrixColumn( m, 3 );
-
-  },
-
-  setFromMatrixScale: function ( m ) {
-
-    var sx = this.setFromMatrixColumn( m, 0 ).length();
-    var sy = this.setFromMatrixColumn( m, 1 ).length();
-    var sz = this.setFromMatrixColumn( m, 2 ).length();
-
-    this.x = sx;
-    this.y = sy;
-    this.z = sz;
-
-    return this;
-
-  },
-
-  setFromMatrixColumn: function ( m, index ) {
-
-    if ( typeof m === 'number' ) {
-
-      console.warn( 'THREE.Vector3: setFromMatrixColumn now expects ( matrix, index ).' );
-      var temp = m;
-      m = index;
-      index = temp;
-
-    }
-
-    return this.fromArray( m.elements, index * 4 );
-
-  },
-
   equals: function ( v ) {
 
     return ( ( v.x === this.x ) && ( v.y === this.y ) && ( v.z === this.z ) );
@@ -713,22 +547,6 @@ Vector3.prototype = {
     array[ offset + 2 ] = this.z;
 
     return array;
-
-  },
-
-  fromBufferAttribute: function ( attribute, index, offset ) {
-
-    if ( offset !== undefined ) {
-
-      console.warn( 'THREE.Vector3: offset has been removed from .fromBufferAttribute().' );
-
-    }
-
-    this.x = attribute.getX( index );
-    this.y = attribute.getY( index );
-    this.z = attribute.getZ( index );
-
-    return this;
 
   }
 

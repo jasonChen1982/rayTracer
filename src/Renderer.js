@@ -1,5 +1,4 @@
 import { Color } from './math/Color';
-import { Vector3 } from './math/Vector3';
 import { Ray } from './math/Ray';
 import { IntersectResult } from './IntersectResult';
 
@@ -58,8 +57,9 @@ Renderer.prototype = {
       color.multiplyScalar(1 - reflectiveness);
 
       if (reflectiveness > 0 && maxReflect > 0) {
-        var r = new Vector3().copy(result.normal).multiplyScalar(-2 * result.normal.clone().dot(ray.direction)).add(ray.direction);
-        ray = new Ray(result.position, r);
+        var scalar = -2 * result.normal.dot(ray.direction);
+        var reflect = result.normal.clone().multiplyScalar(scalar).add(ray.direction);
+        ray = new Ray(result.position, reflect);
         var reflectedColor = this.rayTrace(scene, ray, maxReflect - 1);
         color.add(reflectedColor.multiplyScalar(reflectiveness));
       }

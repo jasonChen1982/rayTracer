@@ -16,7 +16,7 @@ Sphere.prototype = {
   intersect : function(ray) {
     var v = ray.origin.clone().sub(this.center);
     var a0 = v.lengthSq() - this.sqrRadius;
-    var DdotV = ray.direction.clone().dot(v);
+    var DdotV = ray.direction.dot(v);
 
     if (DdotV <= 0) {
       var discr = DdotV * DdotV - a0;
