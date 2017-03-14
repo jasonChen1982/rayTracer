@@ -5,6 +5,9 @@
 
 # a simple ray tracer engine
 
+## npm status
+[![npm Status](https://nodei.co/npm/raytracer.png?downloads=true&stars=true)]
+
 ## Example
 [tracer sphere and plane][ray-tracer]
 
