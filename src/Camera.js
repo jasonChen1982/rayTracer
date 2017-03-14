@@ -13,17 +13,15 @@ function Camera(eye, fov, front, up) {
 Camera.prototype = {
   constructor: Camera,
   init: function () {
-    this.right = new Vector3();
-    this.right.crossVectors(this.front, this.uper);
-    this.up = new Vector3();
-    this.up.crossVectors(this.right, this.front);
+    this.right = new Vector3().crossVectors(this.front, this.uper);
+    this.up = new Vector3().crossVectors(this.right, this.front);
     this.fovScale = Math.tan(this.fov * 0.5 * _Math.DTR) * 2;
   },
-  getRay : function(x, y) {
-    var r = this.right.clone().multiplyScalar((x - 0.5) * this.fovScale);
-    var u = this.up.clone().multiplyScalar((y - 0.5) * this.fovScale);
-    var d = this.front.clone().add(r).add(u).normalize();
-    // console.log(d);
+  getRay: function (x, y) {
+    var r = new Vector3().copy(this.right).multiplyScalar((x - 0.5) * this.fovScale);
+    var u = new Vector3().copy(this.up).multiplyScalar((y - 0.5) * this.fovScale);
+    var d = new Vector3().copy(this.front).addVectors(r, u).normalize();
+
     return new Ray(this.eye.clone(), d);
   }
 };
