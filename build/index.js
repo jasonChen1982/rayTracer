@@ -1988,7 +1988,7 @@ Camera.prototype = {
   getRay: function (x, y) {
     var r = new Vector3().copy(this.right).multiplyScalar((x - 0.5) * this.fovScale);
     var u = new Vector3().copy(this.up).multiplyScalar((y - 0.5) * this.fovScale);
-    var d = new Vector3().copy(this.front).addVectors(r, u).normalize();
+    var d = new Vector3().copy(this.front).add(r).add(u).normalize();
 
     return new Ray(this.eye, d);
   }
