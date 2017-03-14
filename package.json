@@ -9,7 +9,7 @@
     "preversion": "npm run release && git add -A && git commit -m 'release: release new version'",
     "patch": "npm version patch -m 'release: v%s'",
     "postversion": "git push origin master && git push origin v$npm_package_version",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "karma start",
     "release": "npm run build",
     "lint": "eslint ."
   },
@@ -32,7 +32,13 @@
   "homepage": "https://github.com/jasonChen1982/rayTracer#readme",
   "dependencies": {},
   "devDependencies": {
+    "chai": "^3.5.0",
     "eslint": "^3.17.1",
+    "karma": "^1.5.0",
+    "karma-chai": "^0.1.0",
+    "karma-mocha": "^1.3.0",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "mocha": "^3.2.0",
     "pre-commit": "^1.2.2",
     "rollup": "^0.41.4",
     "rollup-watch": "^3.2.2",
