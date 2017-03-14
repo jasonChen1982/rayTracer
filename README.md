@@ -1,5 +1,5 @@
 # Ray Tracer
-[![Build Status](https://img.shields.io/travis/jasonChen1982/raytracer.svg?style=flat-square)](https://travis-ci.org/jasonChen1982/raytracer)
+[![Build Status](https://img.shields.io/travis/jasonChen1982/rayTracer.svg?style=flat-square)](https://travis-ci.org/jasonChen1982/rayTracer)
 [![npm](https://img.shields.io/npm/v/raytracer.svg?style=flat-square)](https://jasonchen1982.github.io/raytracer/)
 
 
