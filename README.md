@@ -4,6 +4,7 @@
 
 
 # a simple ray tracer engine
+![screenshot picture][screenshot]
 
 ## npm status
 [![npm Status](https://nodei.co/npm/raytracer.png?downloads=true&stars=true)](https://www.npmjs.com/package/raytracer)
@@ -40,3 +41,4 @@ renderer.render(scene, camera);
 [MIT](http://opensource.org/licenses/MIT)
 
 [ray-tracer]:https://jasonchen1982.github.io/rayTracer/examples/demo1/ "rayTracer demo"
+[screenshot]:https://jasonchen1982.github.io/rayTracer/examples/static/demo1.png "screenshot picture"

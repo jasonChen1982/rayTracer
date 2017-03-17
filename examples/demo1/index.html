@@ -15,9 +15,9 @@
   #canvas_screen {
     width: 100%;
   }
-  @media screen and (min-width: 512px) {
+  @media screen and (min-width: 1024px) {
     #box_wrap {
-      width: 512px;
+      width: 1024px;
       margin: 80px auto 0;
       padding-top: 0.1px;
     }
@@ -26,18 +26,18 @@
 </head>
 <body>
 <div id="box_wrap">
-  <canvas id="canvas_screen" width="512" height="512"></canvas>
+  <canvas id="canvas_screen" width="1024" height="1024"></canvas>
 </div>
 <script type="text/javascript" src="../../build/index.js?t=132321"></script>
 <script type="text/javascript">
 var sphere = new JC.Sphere(new JC.Vector3(0, 10, -10), 10);
-sphere.material = new JC.PhongMaterial(new JC.Color(1, 0, 0), new JC.Color(1, 1, 1), 16, 0.25);
+sphere.material = new JC.PhongMaterial(new JC.Color('#f4d433'), new JC.Color(1, 1, 1), 16, 0.2);
 
 var plane = new JC.Plane(new JC.Vector3(0, 1, 0), 0);
-plane.material = new JC.CheckerMaterial(0.1, 0.5);
+plane.material = new JC.CheckerMaterial(0.1, 0.2);
 
 var scene = new JC.Scene();
-var camera = new JC.Camera(new JC.Vector3(0, 5, 15), 90, new JC.Vector3(0, 0, -1), new JC.Vector3(0, 1, 0));
+var camera = new JC.Camera(new JC.Vector3(0, 15, 30), 90, new JC.Vector3(0, 0, -1), new JC.Vector3(0, 1, 0));
 var renderer = new JC.Renderer({
   canvas: document.querySelector('#canvas_screen'),
 });

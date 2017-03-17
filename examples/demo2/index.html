@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+<title>JC demo</title>
+<style>
+  * {
+    margin: 0;
+  }
+  #box_wrap {
+    width: 100%;
+  }
+  #canvas_screen {
+    width: 100%;
+  }
+  @media screen and (min-width: 512px) {
+    #box_wrap {
+      width: 512px;
+      margin: 80px auto 0;
+      padding-top: 0.1px;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="box_wrap">
+  <canvas id="canvas_screen" width="512" height="512"></canvas>
+</div>
+<script type="text/javascript" src="../../build/index.js?t=132321"></script>
+<script type="text/javascript">
+var sphere = new JC.Sphere(new JC.Vector3(0, 10, -10), 10);
+sphere.material = new JC.PhongMaterial(new JC.Color(1, 0, 0), new JC.Color(1, 1, 1), 16, 0.25);
+
+var plane1 = new JC.Plane(new JC.Vector3(0, 1, 0), 0);
+plane1.material = new JC.PhongMaterial(new JC.Color(1, 0, 0), new JC.Color(1, 1, 1), 16, 0);
+var plane2 = new JC.Plane(new JC.Vector3(1, 0, 0), 0);
+plane2.material = new JC.PhongMaterial(new JC.Color(1, 0, 0), new JC.Color(1, 1, 1), 16, 0);
+var plane3 = new JC.Plane(new JC.Vector3(0, 1, 0), 0);
+plane3.material = new JC.PhongMaterial(new JC.Color(1, 0, 0), new JC.Color(1, 1, 1), 16, 0);
+var plane4 = new JC.Plane(new JC.Vector3(0, 1, 0), 0);
+plane4.material = new JC.PhongMaterial(new JC.Color(1, 0, 0), new JC.Color(1, 1, 1), 16, 0);
+var plane5 = new JC.Plane(new JC.Vector3(0, 1, 0), 0);
+plane5.material = new JC.PhongMaterial(new JC.Color(1, 0, 0), new JC.Color(1, 1, 1), 16, 0);
+
+var scene = new JC.Scene();
+var camera = new JC.Camera(new JC.Vector3(0, 10, 25), 90, new JC.Vector3(0, 0, -1), new JC.Vector3(0, 1, 0));
+var renderer = new JC.Renderer({
+  canvas: document.querySelector('#canvas_screen'),
+});
+scene.adds(plane1, plane2, plane3, plane4, plane5, sphere);
+
+function render(){
+    RAF(render);
+    var n = Date.now();
+    camera.eye.y = 10 + Math.sin(n / 1000);
+    renderer.render(scene, camera);
+}
+render();
+</script>
+</body>
+
+</html>
+
