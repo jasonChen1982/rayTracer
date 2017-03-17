@@ -11,7 +11,7 @@
     "postversion": "git push origin master && git push origin v$npm_package_version",
     "test": "karma start",
     "release": "npm run build",
-    "fix": "eslint --fix .",
+    "fix": "eslint --fix ./src",
     "lint": "eslint ."
   },
   "pre-commit": [
